@@ -1,0 +1,2 @@
+model_checkpoint_path: "rnn_duration_model.ckpt"
+all_model_checkpoint_paths: "rnn_duration_model.ckpt"

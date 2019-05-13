@@ -7,14 +7,17 @@ import os
 import model_RNN as rnnmodel
 import utils
 import csv
-
+import time
 
 with open("nowtime.txt", 'r') as f: # nowtime
     savepath = f.read()
 sv_datetime = savepath
 
 util = utils.Util()
-MIN_SONG_LENGTH = 50
+MIN_SONG_LENGTH = 45
+ms = time.strftime('_%H%M%S', time.localtime(time.time()))
+filename = sv_datetime
+filename = filename + ms
 
 def test(trained_data, len_data, mode): # trained_data = songs_pitches or songs_durations, len_data = MIN_SONG_LENGTH, mode = pitch or duration
     # Test the RNN model
@@ -28,7 +31,7 @@ def test(trained_data, len_data, mode): # trained_data = songs_pitches or songs_
     # encoder input
     rnn_saver = tf.train.Saver(var_list=rnn_model.FC_vars)
 
-    np.random.seed(100)
+    #np.random.seed(100)
     x_input = np.random.randn(1, rnn_model.sequence_length)
 
     with tf.Session() as sess:
@@ -53,6 +56,9 @@ def print_error(result, trained_data, mode): # result : 생성된 곡, trained_d
         pearson_correlation = []
         result = result[1:]
         trained_data = trained_data[1:]
+        for i in range(0, len(result)):
+            if result[i] == 'Rest':
+                result[i] = np.mean(trained_data)
         error = [abs(int(x) - int(y)) for x, y in zip(result, trained_data)]
         cos_similarity.append(cos_sim(result, trained_data))
         result_mean.append(np.mean(result))
@@ -65,24 +71,24 @@ def print_error(result, trained_data, mode): # result : 생성된 곡, trained_d
         print("std : %0.3f" % np.std(result))
         print("pearson correlation : %0.3f" % pearson_cor(result, trained_data))
         # 생성된 곡(result)의 mean과 std를 csv에 저장
-        if (os.path.exists("./mean_std.csv")) == False:
-            with open('mean_std.csv', 'w', newline='') as f:
+        if (os.path.exists("./mean_std/mean_std.csv")) == False:
+            with open('./mean_std/mean_std.csv', 'w', newline='') as f:
                 wr = csv.writer(f)
                 wr.writerow(result_mean)
                 wr.writerow(result_std)
         else:
-            with open('mean_std.csv', 'a', newline='') as f:
+            with open('./mean_std/mean_std.csv', 'a', newline='') as f:
                 writer = csv.writer(f)
                 writer.writerow(result_mean)
                 writer.writerow(result_std)
         # 생성된 곡의 cosine similarity와 pearson correlation 저장
-        if (os.path.exists("./cos_sim_pearson.csv")) == False:
-            with open('cos_sim_pearson.csv', 'w', newline='') as f:
+        if (os.path.exists("./cos_sim/cos_sim_pearson.csv")) == False:
+            with open('./cos_sim/cos_sim_pearson.csv', 'w', newline='') as f:
                 wr = csv.writer(f)
                 wr.writerow(cos_similarity)
                 wr.writerow(pearson_correlation)
         else:
-            with open('cos_sim_pearson.csv', 'a', newline='') as f:
+            with open('./cos_sim/cos_sim_pearson.csv', 'a', newline='') as f:
                 writer = csv.writer(f)
                 writer.writerow(cos_similarity)
                 writer.writerow(pearson_correlation)
@@ -140,15 +146,13 @@ def main(_):
     for i in range(len(songs_pitches)):
         if len(songs_pitches[i]) > MIN_SONG_LENGTH: # min(songs_len)
             songs_pitches[i] = songs_pitches[i][:MIN_SONG_LENGTH]
-            songs_durations[i] = songs_durations[i][:MIN_SONG_LENGTH] # songs_pitches[0] - result 가 error
+            songs_durations[i] = songs_durations[i][:MIN_SONG_LENGTH]
+            # songs_pitches[0] - result 가 error
 
-    # output song
     pitches = test(songs_pitches, MIN_SONG_LENGTH, mode='pitch')
     durations = test(songs_durations, MIN_SONG_LENGTH, mode='duration')
 
     # make midi file
-    filename = sv_datetime
-
     util.song2midi(pitches, durations, '/generate', filename)
 
 

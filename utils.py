@@ -10,10 +10,12 @@ class Util:
         duration: [4.0, 3.5(..), 3.0, 2.0, 1.75(..), 1.5, 1.0(quarter), 0.75, 0.5, 0.25]
         '''
         # MIDI file path
-        self.MIDI_PATH = "./midi/songs/"
+        songs_file_number = 3
+        file_path = "songs%d" % songs_file_number  # songs파일 넘버로 설정
+        self.MIDI_PATH = "./midi/"+file_path+"/"
         self.FILE_LIST = midiutils.load_filename(self.MIDI_PATH)  # all .mid file list
 
-        self.pitch_sample = list(range(42, 86))
+        self.pitch_sample = list(range(42, 87))
         self.pitch_sample.append(0) # start
         self.pitch_sample.append('Rest')
 
@@ -58,8 +60,9 @@ class Util:
         midiutils.melody2midi(pitches, durations, save_path, filename)
 
     def delete_empty_song(self, name):
-        os.remove("./midi/export_melody/make_test_{}.mid".format(name))
-        os.rename("./midi/songs/{}.mid".format(name), "./midi/songs/empty_{}.mid".format(name))
+        if os.path.exists("./midi/export_melody/make_test_{}.mid".format(name)):
+            os.remove("./midi/export_melody/make_test_{}.mid".format(name))
+            os.rename("./midi/"+file_path+"/{}.mid".format(name), "./midi/"+file_path+"/empty_{}.mid".format(name))
 
 if __name__=="__main__":
     util = Util()

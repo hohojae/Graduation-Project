@@ -44,7 +44,7 @@ def train(trained_data, model, mode):
         for i in range(step):
             train_samples = [trained_data[i] for i in sorted(random.sample(range(len(trained_data)), model.batch_size))] # 배치사이즈(지금은 5)만큼 랜덤으로 훈련할곡 뽑음
             x_data, y_data = model.data2idx(train_samples, mode)
-            x_data = np.reshape(x_data, [model.batch_size, x_data.shape[1]]) #
+            x_data = np.reshape(x_data, [model.batch_size, x_data.shape[1]])
             y_data = np.reshape(y_data, [model.batch_size, y_data.shape[1]])
 
             loss_val, _ = sess.run([model.loss, model.train], feed_dict={model.X: x_data, model.Y: y_data}) # train
@@ -54,7 +54,8 @@ def train(trained_data, model, mode):
             writer.add_summary(summary, i)
             # result_str = [model.idx2char[c] for c in np.squeeze(result)]
             print("{:4d}  loss: {:.5f}".format(i, loss_val))
-            if mode == "pitch": # pitch의 loss를 csv파일에 저장
+            # pitch의 loss를 csv파일에 저장
+            if mode == "pitch":
                 if (i % 10) == 0:
                     loss_plot_pitch.append(loss_val)
                     step_plot_pitch.append(i)
@@ -133,10 +134,10 @@ def main(_):
         train([trained_song['pitches'][:num_melody]], pitch_net, mode='pitch')
         train([trained_song['durations'][:num_melody]], duration_net, mode='duration')
     else:
-
         train(songs_durations, duration_net, mode='duration')
-        train(songs_pitches, pitch_net, mode='pitch')
-    with open(lossfile, 'r') as f: # pitch의 loss를 그래프로 그려서 저장
+        train(songs_pitches, pitch_net, mode='pitch') # pitch를 나중에 train하여 loss값 얻음
+    # pitch의 loss를 그래프로 그려서 저장
+    with open(lossfile, 'r') as f:
         x_list = []
         y_list = []
         rdr = csv.reader(f)
@@ -153,7 +154,7 @@ def main(_):
         plt.title('RNN Loss')
         plt.grid()
         plt.savefig("./loss/loss_%d_RNN.png" %nowTIME)
-        plt.show()
+        # plt.show()
 
 
 if __name__ == '__main__':

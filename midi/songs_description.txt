@@ -1,0 +1,11 @@
+songs1 : reels, 420songs, 2/4 and 4/4. This includes marches, polkas, rants etc.
+songs2 : jigs, 309songs, This directory contains 6/8 single (mostly "crochet-quaver" per half bar) and double jigs (mostly quavers).
+songs3 : Hornpipes, 65songs, This include hornpipes, schottisches and strathspeys.
+songs4 : waltzes, 52songs, 3/4 time signature.
+songs5 : ashover, 37songs, provided by Mick Peat. The IPR of these tunes resides with Mick Peat.
+songs6 : morris, 26songs, They include some chosen for listening to, and some from the Foresters Morris Men's repertoire.
+songs7 : playford, 15songs, ?
+songs8 : Christmas ones, 11songs
+songs9 : Slip jigs, 10songs, These are jigs in 9 8 time.
+
+database description based on "http://www.chezfred.org.uk/freds/music/database.htm"

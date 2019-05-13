@@ -25,9 +25,9 @@ class RNN(object):
         self.char2idx = {c: i for i, c in enumerate(self.idx2char)} # char2idx = {0: 0, 1: 1, 2: 2, 3: 3, ... , 35: 35, 36: 36, 50: 37} 키=데이터, 아이템=인덱스, 멜로디를 인덱스로
 
         # set hyperparameter
-        self.input_size = 47  # 38(=멜로디의 개수와 같음) len(self.char2idx)
+        self.input_size = 48  # 38(=멜로디의 개수와 같음) len(self.char2idx)
         self.hidden_size = 128                 # 셀에서의 출력 크기
-        self.output_size = 47  # 38
+        self.output_size = 48  # 38
         self.batch_size = batch_size
         self.sequence_length = song_length - 1 # 송렝스 아직 모름, 시퀀스 렝스=송렝스-1
         self.learning_rate = 0.01
@@ -42,7 +42,7 @@ class RNN(object):
         y_data = [] # y_data 초기화
         for d in data:
             train_data = []
-            train_data = [util.getchar2idx(mode)[i] for i in d] # data의 멜로디를 인덱스로 바꾼다.
+            train_data = [util.getchar2idx(mode)[i] for i in d[:]] # data의 멜로디를 인덱스로 바꾼다.
             x_data.append(train_data[:-1])
             y_data.append(train_data[1:])
 
@@ -59,10 +59,15 @@ class RNN(object):
 
             self.initial_state = self.cell.zero_state(self.batch_size, dtype=tf.float32)  # 셀 모양 그대로 0을 채워놓은 텐서를 저장해놓는다.
 
+
             if (self.mode == 'train'):
                 self.initial_state = self.cell.zero_state(self.batch_size, dtype=tf.float32)
+                #self.initial_state = tf.random_normal([self.batch_size, self.hidden_size], mean=0.0, stddev=1.0,
+                #                                      dtype=tf.float32)
             elif (self.mode == 'test'):
                 self.initial_state = self.cell.zero_state(1, dtype=tf.float32)
+                #self.initial_state = tf.random_normal([self.batch_size, self.hidden_size], mean=0.0, stddev=1.0,
+                 #                                     dtype=tf.float32)
 
             ########### dynamic ##########
             outputs, state = tf.nn.dynamic_rnn(cell=self.cell, inputs=self.x_one_hot, initial_state=self.initial_state)
