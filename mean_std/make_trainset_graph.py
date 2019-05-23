@@ -54,6 +54,15 @@ q = np.arange(9)
 ys = [i+q+(i*q)**2 for i in range(9)]
 colors = cm.rainbow(np.linspace(0, 1, len(ys)))
 
+x_mean = np.mean(x1,x2,x3,x4,x5)
+x_mean2 = np.mean(x6,x7,x8,x9)
+x_mean3 = np.mean(x_mean, x_mean2)
+
+y_mean = np.mean(y1,y2,y3,y4,y5)
+y_mean2 = np.mean(y6,y7,y8,y9)
+y_mean3 = np.mean(y_mean, y_mean2)
+print(x_mean3, y_mean3)
+'''
 plt.figure(1)
 plt.title("9Class Dataset Mean and Standard Deviation Distribution")
 plt.grid()
@@ -73,3 +82,4 @@ plt.legend(loc='upper left')
 plt.xticks([40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90]) # x축의 범위 지정 40~90
 plt.yticks([2, 3, 4, 5, 6, 7]) # y축
 plt.savefig("./mean_std_dataset.png")
+'''

@@ -32,7 +32,32 @@ def test(trained_data, len_data, mode): # trained_data = songs_pitches or songs_
     rnn_saver = tf.train.Saver(var_list=rnn_model.FC_vars)
 
     #np.random.seed(100)
-    x_input = np.random.randn(1, rnn_model.sequence_length)
+    #x_input = np.random.randn(1, rnn_model.sequence_length)
+    if mode == 'pitch':
+        x_input = np.random.normal(70, 4, (1, rnn_model.sequence_length))
+        x_list = []
+        for i in range(0, len(x_input[0])):
+            x_list.append(int(x_input[0][i]))
+
+        pitch_sample = util.getchar2idx(mode)
+        x_idx = []
+        for i in range(0, len(x_list)):
+            v = x_list[i]
+            x_idx.append(pitch_sample[v])
+        x_input = np.reshape(x_idx, [1, rnn_model.sequence_length])
+    else:
+        duration = [4.0, 3.5, 3.0, 2.0, 1.75, 1.5, 1.0, 0.75, 0.5, 0.25]
+        x_input = np.random.choice(duration, rnn_model.sequence_length, replace=True)
+        x_list = []
+        for i in range(0, len(x_input)):
+            x_list.append(x_input[i])
+
+        duration_sample = {c: i for i, c in enumerate(duration)}
+        x_idx = []
+        for i in range(0, len(x_list)):
+            v = x_list[i]
+            x_idx.append(duration_sample[v])
+        x_input = np.reshape(x_idx, [1, rnn_model.sequence_length])
 
     with tf.Session() as sess:
         rnn_saver.restore(sess, "./save/" + sv_datetime + "/rnn_{}_model.ckpt".format(mode))
@@ -42,7 +67,10 @@ def test(trained_data, len_data, mode): # trained_data = songs_pitches or songs_
 
         # print : result - trained_data
         print_error(result, trained_data, mode)
-
+        with open("./result/result_%s.txt" %mode, 'w') as f:
+            for i in range(0, len(result)):
+                result_txt = str(result[i])+' '
+                f.write(result_txt)
         return result
 
 def print_error(result, trained_data, mode): # result : 생성된 곡, trained_data : 훈련데이터 100개
