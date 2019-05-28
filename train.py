@@ -19,14 +19,14 @@ step = 2000
 
 with open("nowtime.txt", 'w') as f:
     f.write(NOWTIME)
-
+'''
 with open('./select_music.txt', 'r') as f:
     rd = f.read()
     songs_list = rd.split()
 user_choice = []
 for i in range(0, len(songs_list)):
     user_choice.append(int(songs_list[i][:-1])) # [1, 3, 5, 10 ,11]의 형식
-
+'''
 def train(trained_data, model, mode):
     '''
     train the model using data
@@ -93,7 +93,7 @@ def main(_):
     print("pitches : ", trained_song['pitches'])
     print("durations : ", trained_song['durations'])
     '''
-    '''
+
     # load all midi file
     all_songs = util.get_all_song()
 
@@ -137,6 +137,7 @@ def main(_):
         songs_len.append(song['length'])
         songs_pitches.append(song['pitches'])  # 노래들의 피치 저장
         songs_durations.append(song['durations'])
+    '''
     # 여러 곡의 길이를 제일 짧은 곡에 맞춘다.
     for i in range(len(songs_pitches)):
         if len(songs_pitches[i]) > min(songs_len):
@@ -144,7 +145,7 @@ def main(_):
             songs_durations[i] = songs_durations[i][:min(songs_len)]
 
     ### Train setting ###
-    num_songs = len(songs_info) # num_songs = 노래 개수
+    num_songs = len(songs) # num_songs = 노래 개수
     num_melody = min(songs_len) # num_melody = 가장 짧은 노래의 길이
 
     print("num_song: ", num_songs)

@@ -10,7 +10,7 @@ class Util:
         duration: [4.0, 3.5(..), 3.0, 2.0, 1.75(..), 1.5, 1.0(quarter), 0.75, 0.5, 0.25]
         '''
         # MIDI file path
-        songs_file_number = 3
+        songs_file_number = 7
         file_path = "songs%d" % songs_file_number  # songs파일 넘버로 설정
         self.MIDI_PATH = "./midi/"+file_path+"/"
         self.FILE_LIST = midiutils.load_filename(self.MIDI_PATH)  # all .mid file list

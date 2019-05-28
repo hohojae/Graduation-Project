@@ -34,7 +34,7 @@ def test(trained_data, len_data, mode): # trained_data = songs_pitches or songs_
     #np.random.seed(100)
     #x_input = np.random.randn(1, rnn_model.sequence_length)
     if mode == 'pitch':
-        x_input = np.random.normal(70, 4, (1, rnn_model.sequence_length))
+        x_input = np.random.normal(72.6407, 3.9704, (1, rnn_model.sequence_length))
         x_list = []
         for i in range(0, len(x_input[0])):
             x_list.append(int(x_input[0][i]))
